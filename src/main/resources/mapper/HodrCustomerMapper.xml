@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.hzero.order.hzeroorder24870.infra.mapper.HodrCustomerMapper">
+
+    <select id="selectHodrCustomerList" resultType="org.hzero.order.hzeroorder24870.domain.entity.HodrCustomer">
+        select * FROM hodr_customer
+        <where>
+            <if test="customerId != null and customerId != ''">
+                AND customer_id = #{customerId}
+            </if>
+            <if test="customerName != null and customerName != ''">
+                AND customer_name = #{customerName}
+            </if>
+            <if test="companyId != null and companyId != ''">
+                AND company_id = #{companyId}
+            </if>
+            <if test="enabledFlag != null and enabledFlag != ''">
+                AND enabled_flag = #{enabledFlag}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="selectOneByCustomerNumber" resultType="org.hzero.order.hzeroorder24870.domain.entity.HodrCustomer">
+        select * FROM hodr_customer WHERE customer_number = #{customerNumber}
+    </select>
+</mapper>

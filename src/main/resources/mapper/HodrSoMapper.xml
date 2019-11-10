@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.hzero.order.hzeroorder24870.infra.mapper.HodrSoMapper">
+
+    <resultMap id="OrderDetailsDTO" type="org.hzero.order.hzeroorder24870.api.dto.OrderDetailsDTO">
+        <result column="soHeader_id" property="soHeaderId"/>
+        <result column="order_number" property="orderNumber"/>
+        <result column="company_id" property="companyId"/>
+        <result column="order_date" property="orderDate"/>
+        <result column="order_Status" property="orderStatus"/>
+        <result column="customer_id"  property="customerId"/>
+        <collection property="hodrSoLineList" ofType="org.hzero.order.hzeroorder24870.domain.entity.HodrSoLine">
+            <result column="so_line_id" property="soLineId"/>
+            <result column="so_header_id" property="soHeaderId"/>
+            <result column="line_number" property="lineNumber"/>
+            <result column="item_id" property="itemId"/>
+            <result column="order_quantity" property="orderQuantity"/>
+            <result column="order_quantity_uom" property="orderQuantityUom"/>
+            <result column="unit_selling_price" property="unitSellingPrice"/>
+            <result column="description" property="description"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="orderRecodeDTOMap" type="org.hzero.order.hzeroorder24870.api.dto.OrderRecodeDTO">
+        <result column="order_number" property="orderNumber"/>
+        <result column="company_number" property="companyName"/>
+        <result column="customer_name" property="customerName"/>
+        <result column="order_date" property="orderDate"/>
+        <result column="order_status" property="orderStatus"/>
+        <result column="line_number" property="lineNumber"/>
+        <result column="item_code" property="itemCode"/>
+        <result column="order_quantity" property="orderQuantity"/>
+        <result column="order_quantity_uom" property="orderQuantityUom"/>
+        <result column="unit_selling_price" property="unitSellingPrice"/>
+        <result column="netAmount" property="netAmount"/>
+        <result column="item_description" property="itemDescription"/>
+    </resultMap>
+
+    <select id="findOrderByCondition" resultType="org.hzero.order.hzeroorder24870.api.dto.OrderVo">
+        select
+        a.order_number,b.company_name,c.customer_name,a.order_date,a.order_status,(d.order_quantity*d.unit_selling_price) "sum"
+        from hodr_so_header a,hodr_company b,hodr_customer c,hodr_so_line d,hodr_item e
+        where a.company_id=b.company_id and a.customer_id=c.customer_id and a.so_header_id=d.so_header_id and d.item_id=e.item_id
+
+        <if test="companyName != null and companyName != ''">
+            and b.company_name = #{companyName}
+        </if>
+        <if test="customerName != null and customerName != ''">
+            and c.customer_name = #{customerName}
+        </if>
+        <if test="orderNumber != null and orderNumber != ''">
+            and a.order_number = #{orderNumber}
+        </if>
+        <if test="itemCode != null and itemCode != ''">
+            and e.itemCode = #{itemCode}
+        </if>
+        <if test="orderStatus != null and orderStatus != ''">
+            and a.order_status = #{orderStatus}
+        </if>
+
+    </select>
+
+    <select id="findHodrSoByOrderNumber" resultMap="OrderDetailsDTO">
+        select hsh.so_header_id,hsh.order_number,hsh.company_id,hsh.order_date,hsh.order_status,hsl.so_line_id,hsl.so_header_id,hsl.line_number,hsl.item_id,hsl.order_quantity,hsl.order_quantity_uom,hsl.unit_selling_price,hsl.description FROM hodr_so_header hsh,hodr_so_line hsl
+        where hsh.so_header_id = hsl.so_header_id and order_number = #{orderNumber}
+    </select>
+
+
+    <select id="exportHodrSo" resultType="org.hzero.order.hzeroorder24870.api.dto.OrderRecodeDTO">
+        select
+        a.order_number,b.company_name,c.customer_name,a.order_date,a.order_status,d.line_number,e.item_code,d.order_quantity,d.order_quantity_uom,d.unit_selling_price,e.item_description
+        from hodr_so_header a,hodr_company b,hodr_customer c,hodr_so_line d,hodr_item e
+        where a.company_id=b.company_id and a.customer_id=c.customer_id and a.so_header_id=d.so_header_id and d.item_id=e.item_id
+
+        <if test="companyName != null and companyName != ''">
+            and b.company_name = #{companyName}
+        </if>
+        <if test="customerName != null and customerName != ''">
+            and c.customer_name = #{customerName}
+        </if>
+        <if test="orderNumber != null and orderNumber != ''">
+            and a.order_number = #{orderNumber}
+        </if>
+        <if test="itemCode != null and itemCode != ''">
+            and e.itemCode = #{itemCode}
+        </if>
+        <if test="orderStatus != null and orderStatus != ''">
+            and a.order_status = #{orderStatus}
+        </if>
+    </select>
+
+
+</mapper>

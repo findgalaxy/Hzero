@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.hzero.order.hzeroorder24870.infra.mapper.HodrItemMapper">
+
+    <select id="selectHodrItemList" resultType="org.hzero.order.hzeroorder24870.domain.entity.HodrItem">
+        select * FROM hodr_item
+        <where>
+            <if test="itemId != null and itemId != ''">
+                AND item_id = #{itemId}
+            </if>
+            <if test="itemCode != null and itemCode != ''">
+                AND item_code = #{itemCode}
+            </if>
+            <if test="itemDescription != null and itemDescription != ''">
+                AND item_description = #{itemDescription}
+            </if>
+            <if test="saleableFlag != null and saleableFlag != ''">
+                AND saleable_flag = #{saleableFlag}
+            </if>
+            <if test="startActiveDate != null and startActiveDate != ''">
+                AND start_active_date = #{startActiveDate}
+            </if>
+            <if test="endActiveDate != null and endActiveDate != ''">
+                AND end_active_date = #{endActiveDate}
+            </if>
+            <if test="enabledFlag != null and enabledFlag != ''">
+                AND enabled_flag = #{enabledFlag}
+            </if>
+        </where>
+    </select>
+
+
+
+    <select id="selectOneByItemCode" resultType="org.hzero.order.hzeroorder24870.domain.entity.HodrItem">
+        SELECT * FROM hodr_item WHERE item_code = #{itemCode};
+    </select>
+</mapper>
